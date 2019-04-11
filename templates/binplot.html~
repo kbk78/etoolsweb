@@ -48,6 +48,7 @@ var openFile = function(event){
   reader.onload = function(){
    var text1 = reader.result.split('\n').slice(-8761).join('\n');
    values = d3.csvParseRows(text1,function(d,i){return +d[6]*1.8+32;});
+	  return values}
 
    margin = {top: 20, right: 80, bottom: 30, left: 40},
              width = 950 - margin.left - margin.right,
