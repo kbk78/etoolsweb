@@ -4,45 +4,54 @@
 <head>
   <title>etoolsweb</title>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
 </head>
-
 <body>
 
-<div>
-<label for="weatherFile">Select weather file</label>
-<input name='weatherFile' type='file' id='f1' accept='.epw' onchange='openFile(event)'><br>
-</div>
-
-
-<script>
-var openFile = function(event){
-  var input = event.target;
-  var reader = new FileReader();
-  reader.readAsText(input.files[0]);
-  reader.onload = function(){
-   var text1 = reader.result.split('\n').slice(-8761).join('\n');
-   values = d3.csvParseRows(text1,function(d,i){return +d[6]*1.8+32;});
-	  return values;}
-
-console.log(values)
-</script>
-
-
+	
 <div id = "app-6">
-<input type="range" min=1 max=100 value=20 class='slider' id="myrange" v-model="bins">  
-<br>
-<input v-model="bins" placeholder="edit me">
-<p>Message is: {{ bins }}</p>
+	<label for="weatherFile">Select weather file</label><br>
+	<input type="file" id="file" ref="idfFiles" class="custom-file-input" @change="openFile" multiple><br><br>
+	<input type="range" min=1 max=100 value=20 class='slider' id="myrange" v-model="bins">  <br><br>
+	<input v-model="bins" placeholder="edit me">
+	<p>Message is: {{ bins }}</p>
+	<ul><li v-for="tdb in tdbs">
+	    {{tdb}}
+	 </li></ul>
 </div>
 
 <script>
-var app6 = new Vue({
-  el: '#app-6',
-  data: {
-    bins: 20
-  }
-})
+	var app6 = new Vue({
+	  el: '#app-6',
+	  data: {
+	   bins: 20,
+	   tdbs: []
+	  },
+	  methods:{
+	  openFile (){
+	  var input = this.$ref.idfFiles.files;
+/*	  var reader = new FileReader();
+	  reader.readAsText(input.files[0]);
+	  reader.onload = function(){
+	   var text1 = reader.result.split('\n').slice(-8761).join('\n');
+	   this.tdbs = d3.csvParseRows(text1,function(d,i){return +d[6]*1.8+32;});
+	    }
+	  */
+	 }
+	})
 </script>
+
+
+	  openFile = function(event){
+	  var input = event.target;
+	  var reader = new FileReader();
+	  reader.readAsText(input.files[0]);
+	  reader.onload = function(){
+	   var text1 = reader.result.split('\n').slice(-8761).join('\n');
+	   this.tdbs = d3.csvParseRows(text1,function(d,i){return +d[6]*1.8+32;});
+
+
+
 
 </body>
 </html>
