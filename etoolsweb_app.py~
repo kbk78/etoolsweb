@@ -1,6 +1,6 @@
 from flask import Flask,render_template,request, make_response, send_file
-from flask.ext.login import LoginManager,login_user ,UserMixin
-from werkzeug import secure_filename
+#from flask.ext.login import LoginManager,login_user ,UserMixin
+#from werkzeug import secure_filename
 import os
 
 

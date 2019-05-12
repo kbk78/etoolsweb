@@ -11,9 +11,9 @@ def home():
 	return "Hello, check address!"
 
 
-@app.route('/binplot', methods=['GET','POST'])
+@app.route('/vuebinplotdc', methods=['GET','POST'])
 def bindata():
-	return render_template("binplot.html")
+	return render_template("vuebinplotdc.htm")
 
 
 if __name__=='__main__':

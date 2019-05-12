@@ -3,44 +3,62 @@
 
 <head>
   <title>etoolsweb</title>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-      <script src = "https://unpkg.com/crossfilter2@1.4.7/crossfilter.min.js"></script>
-      <script src="https://d3js.org/d3.v5.min.js"></script>
-      <script src = "http://unpkg.com/dc@3/dc.js"></script>
+  
+	<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+	<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>
+
+	<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+	<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+	<script src="https://unpkg.com/crossfilter2@1.4.7/crossfilter.min.js"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<script src="http://unpkg.com/dc@3/dc.js"></script>
+
 </head>
 <body>
 	
 <div id = "app-6">
-	<label for="weatherFile">Select weather file</label><br>
-	<input type="file" id="file" ref="idfFiles" class="custom-file-input" @change="openFile" multiple><br><br>
-	<input type="range" min=1 max=100 value=20 class='slider' id="myrange" v-model="bins">  <br><br>
+<br><br>
+	<b-container fluid style="border:1px solid #cecece;">
+	<label for="idffile">Select weather file</label><br>
+	<b-form-file v-model="file" id='idffile' placeholder="Choose *.epw weather file" @input="openFile"></b-form-file><br><br>
+	<b-form-input v-model='bins' type="range" min=1 max=100 id="myrange"></b-form-input><br><br>
 	<input v-model="bins" placeholder="edit me">
 	<p>Message is: {{ bins }}</p> <br>
 	<div id = 'ch1'>ch1</div>
+	</b-container>
 </div>
+
+<div id = "apptest">
+ <b-alert show> Hello {{ name }}! </b-alert>
+
+</div>
+
+
+
 
 <script>
 	var app6 = new Vue({
 	  el: '#app-6',
 	  data: {
+	   file: '',
 	   bins: 20,
-	   tdbs: [1]
+	   tdbs: [1],
 	  },
 	  methods:{
 	  openFile (){
-	  let self =this
-	  var input = self.$refs.idfFiles.files;
 	  var reader = new FileReader();
-	  reader.readAsText(app6.$refs.idfFiles.files[0]);
+	  reader.readAsText(this.file);
 	  reader.onload = function(){
 	  var text1 = reader.result.split('\n').slice(-8761).join('\n');
-	  self.tdbs = d3.csvParseRows(text1,function(d,i){return +d[6]*1.8+32;});
+	  this.tdbs = d3.csvParseRows(text1,function(d,i){return +d[6]*1.8+32;});
 	  }
 
-			var ndx = crossfilter(self.tdbs);
+			var ndx = crossfilter(this.tdbs);
 			var binwidth = self.bins;
 			var dim = ndx.dimension(function(d) { return d;});
 			var group = dim.group(function(d) { return binwidth * Math.floor(d/binwidth); });
+		  console.log(group)
 
 
 			var chart = dc.barChart("#ch1");
@@ -54,8 +72,18 @@
 			    .dimension(dim)
 			    .group(group)
 			chart.render();
-	  }}
+	 }
+	 }
 	  })
+
+var apptest = new Vue({
+  el: "#apptest",
+  data: {
+    name: "Sitepoint",
+	value:4
+  }
+});
+
 
 </script>
 
