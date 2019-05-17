@@ -24,9 +24,24 @@
 	<b-form-file id='idffile' placeholder="Choose *.epw weather file" @input="openFile"></b-form-file><br><br>
 	<b-form-input v-model='bins' type="range" min=1 max=100 id="myrange" @change="plotch"></b-form-input><br><br>
 	<input v-model.lazy="bins" placeholder="edit me" @change="plotch">
-	<p>Message is: {{ bins }}</p> <br>
+	<p>Bin width: {{ bins }}</p> <br>
 	<div id = 'ch1'>ch1</div>
+	<div>
+	<b-table  striped hover :items="items" fields="temps"></b-table>
+	<table id="tdb-table"></table>
+	</div>
+
+	
+	<div id='data-table'>
+      <!-- create a custom header -->
+      <div class='header'>
+          <span>tdbs</span>
+      </div>
+
+      <!-- data rows will filled in here -->
+   </div>
 	</b-container>
+
 </div>
 
 <div id = "apptest">
@@ -34,48 +49,60 @@
 
 </div>
 
-
 <script>
 	var app6 = new Vue({
 	  el: '#app-6',
 	  data: {
 	   bins: 20,
 	   tdbs: [1],
+	   items: [
+			  { age: [32,22], },
+		  ]
 	  },
 	  methods:{
-		  openFile (event){
-			  var reader = new FileReader();
-			  reader.readAsText(event);
-			  reader.onload = function(){
-				  var text1 = reader.result.split('\n').slice(-8761).join('\n');
-				  return d3.csvParseRows(text1,function(d,i){return +d[6]*1.8+32;});
-				  }
-				
-
-			  console.log(file)
-			  },
 		  plotch(){
-
 			var tdbscrossfilter = crossfilter(this.tdbs);
-			var binwidth = self.bins;
+			var binwidth = this.bins;
 			var tdbsdim = tdbscrossfilter.dimension(function(d) { return d;});
 			var tdbsgroup = tdbsdim.group(function(d) { return binwidth * Math.floor(d/binwidth); });
-			var tdbsgroup = tdbsdim.group().reduceCount();
-
-	                console.log(this.tdbs)
+	//		var tdbsgroup = tdbsdim.group().reduceCount();
 
 			var chart = dc.barChart("#ch1");
 			chart
 			    .width(768)
 			    .height(480)
-	//		    .xUnits(dc.units.fp.precision(binwidth))
-			    .x(d3.scaleLinear().domain([-20,100]))
+			    .xUnits(dc.units.fp.precision(binwidth))
+			//    .xUnits(tdbsgroup)
+			    .x(d3.scaleLinear().domain(d3.extent(this.tdbs)))
 			    .brushOn(false)
 			    .yAxisLabel("Temperature bins degF")
 			    .dimension(tdbsdim)
 			    .group(tdbsgroup)
+	//		    .xAxis().ticks(5)
 			chart.render();
-			 }
+
+			  
+			dc.dataTable("#tdb-table")
+			    .dimension(tdbsdim)
+			    .section(function(d){return d})
+			    .columns(['tdbs'])
+			    .size(500) 
+		       	    .order(d3.descending)
+
+
+			 },
+
+		  openFile (event){
+			  console.log('loading')
+			  let self = this
+			  var reader = new FileReader();
+			  reader.onload = function(e){
+			  var text1 = reader.result.split('\n').slice(-8761).join('\n');
+			  self.tdbs = d3.csvParseRows(text1,function(d,i){return +d[6]*1.8+32;});
+			  self.plotch()
+			  }
+			  reader.readAsText(event);
+			  }
 		 }
 	 }
 	  )

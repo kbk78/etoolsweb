@@ -4,8 +4,8 @@
 <head>
   <title>etoolsweb</title>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-      <script src = "js/crossfilter.js"></script>
-      <script src = "js/dc.js"></script>
+      <script src = "https://unpkg.com/crossfilter2@1.4.7/crossfilter.min.js"></script>
+      <script src = "http://unpkg.com/dc@3/dc.js"></script>
       <script src="https://d3js.org/d3.v5.min.js"></script>
 </head>
 <body>
@@ -19,6 +19,9 @@
 	<p>Message is: {{ bins }}</p> <br>
 	<div id = 'ch1'>ch1</div>
 </div>
+
+area
+div
 
 <script>
 	var app6 = new Vue({
