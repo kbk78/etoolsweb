@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>etoolsweb</title>
+  
+	<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+	<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>
+
+	<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+	<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+	<script src="https://unpkg.com/crossfilter2@1.4.7/crossfilter.min.js"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<script src="http://unpkg.com/dc@3/dc.js"></script>
+
+</head>
+<body>
+	
+<div id = "app-6">
+<br><br>
+	<b-container fluid style="border:1px solid #cecece;">
+	<label for="idffile">Select weather file</label><br>
+	<b-form-file id='idffile' placeholder="Choose *.epw weather file" @input="openFile"></b-form-file><br><br>
+	<b-form-input v-model='bins' type="range" min=1 max=100 id="myrange" @change="plotch"></b-form-input><br><br>
+	<input v-model.lazy="bins" placeholder="edit me" @change="plotch">
+	<p>Bin width: {{ bins }}</p> <br>
+	<div id = 'ch1'>ch1</div>
+	<div>
+	<b-table  striped hover :items="items" fields="temps"></b-table>
+	<table id="tdb-table"></table>
+	</div>
+
+	
+	<div id='data-table'>
+      <!-- create a custom header -->
+      <div class='header'>
+          <span>tdbs</span>
+      </div>
+
+      <!-- data rows will filled in here -->
+   </div>
+	</b-container>
+
+</div>
+
+<div id = "apptest">
+ <b-alert show> Hello {{ name }}! </b-alert>
+
+</div>
+
+<script>
+	var app6 = new Vue({
+	  el: '#app-6',
+	  data: {
+	   bins: 20,
+	   tdbs: [1],
+	   items: [
+			  { age: [32,22], },
+		  ]
+	  },
+	  methods:{
+		  plotch(){
+			var tdbscrossfilter = crossfilter(this.tdbs);
+			var binwidth = this.bins;
+			var tdbsdim = tdbscrossfilter.dimension(function(d) { return d;});
+			var tdbsgroup = tdbsdim.group(function(d) { return binwidth * Math.floor(d/binwidth); });
+	//		var tdbsgroup = tdbsdim.group().reduceCount();
+
+			var chart = dc.barChart("#ch1");
+			chart
+			    .width(768)
+			    .height(480)
+			    .xUnits(dc.units.fp.precision(binwidth))
+			//    .xUnits(tdbsgroup)
+			    .x(d3.scaleLinear().domain(d3.extent(this.tdbs)))
+			    .brushOn(false)
+			    .yAxisLabel("Temperature bins degF")
+			    .dimension(tdbsdim)
+			    .group(tdbsgroup)
+	//		    .xAxis().ticks(5)
+			chart.render();
+
+			  
+dc.dataTable("#tdb-table")
+            .dimension(tdbsdim)
+	    .section(function(d){return d})
+            .columns(['tdbs'])
+        .size(500) 
+        .order(d3.descending)
+			 },
+
+		  openFile (event){
+			  console.log('loading')
+			  let self = this
+			  var reader = new FileReader();
+			  reader.onload = function(e){
+			  var text1 = reader.result.split('\n').slice(-8761).join('\n');
+			  self.tdbs = d3.csvParseRows(text1,function(d,i){return +d[6]*1.8+32;});
+			  self.plotch()
+			  }
+			  reader.readAsText(event);
+			  }
+		 }
+	 }
+	  )
+
+var apptest = new Vue({
+  el: "#apptest",
+  data: {
+    name: "Sitepoint",
+	value:4
+  }
+});
+
+
+</script>
+
+</body>
+</html>
