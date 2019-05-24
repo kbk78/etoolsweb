@@ -11,10 +11,9 @@ def home():
 	return "Hello, check address!"
 
 
-@app.route('/binplot', methods=['GET','POST'])
+@app.route('/simdata', methods=['GET','POST'])
 def bindata():
-	return render_template("binplot.html")
-
+	return render_template("simdata.htm")
 
 if __name__=='__main__':
 	app.run(debug=True)

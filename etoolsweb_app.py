@@ -10,11 +10,9 @@ app=Flask(__name__)
 def home():
 	return "Hello, check address!"
 
-
-@app.route('/vuebinplotdc', methods=['GET','POST'])
+@app.route('/simdata', methods=['GET','POST'])
 def bindata():
-	return render_template("vuebinplotdc.htm")
-
+	return render_template("simdata.htm")
 
 if __name__=='__main__':
 	app.run(debug=True)

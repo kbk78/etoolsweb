@@ -8,6 +8,7 @@
 	<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>
 
 	<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue-clipboards@1.2.4/dist/vue-clipboards.min.js"></script>
 	<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
 
 	<script src="https://unpkg.com/crossfilter2@1.4.7/crossfilter.min.js"></script>
@@ -18,46 +19,48 @@
 <body>
 	
 <div id = "app-6">
-<br><br>
+	<br><br>
 	<b-container fluid style="border:1px solid #cecece;">
-	<label for="idffile">Select weather file</label><br>
-	<b-form-file id='idffile' placeholder="Choose *.epw weather file" @input="openFile"></b-form-file><br><br>
-	<b-form-input v-model='bins' type="range" min=1 max=100 id="myrange" @change="plotch"></b-form-input><br><br>
-	<input v-model.lazy="bins" placeholder="edit me" @change="plotch">
-	<p>Bin width: {{ bins }}</p> <br>
-	<div id = 'ch1'>ch1</div>
-	<div>
-	<b-table  striped hover :items="items" fields="temps"></b-table>
-	<table id="tdb-table"></table>
-	</div>
+		<label for="idffile">Select weather file</label><br>
+		<b-form-file id='idffile' placeholder="Choose *.epw weather file" @input="openFile"></b-form-file><br><br>
+		<b-form-input v-model='bins' type="range" min=1 max=100 id="myrange" @change="plotch"></b-form-input><br><br>
+		<input v-model.lazy="bins" placeholder="edit me" @change="plotch"><br>
+		<p>Bin width: {{ bins }}</p> <br>
+		<div id = 'ch1'></div>
 
-	
-	<div id='data-table'>
-      <!-- create a custom header -->
-      <div class='header'>
-          <span>tdbs</span>
-      </div>
+	        <b-button variant = "outline-primary" v-clipboard:copy="objtoarray(items)">Copy</b-button>
+		<b-table  striped hover :items="items" fields="temps"></b-table>
+		<!-- 
+		<table id="tdb-table"></table>
 
-      <!-- data rows will filled in here -->
-   </div>
+			 <div id='data-table'>
+			 <div class='header'>
+			 <span>tdbs</span>
+ 				</div>
+			 </div>
+		 /-->
+
 	</b-container>
 
 </div>
+<br>
+<br>
 
 <div id = "apptest">
- <b-alert show> Hello {{ name }}! </b-alert>
-
+	        <button  v-clipboard:copy="message">Copy</button>
 </div>
 
 <script>
+        Vue.use(vueClipboards);
 	var app6 = new Vue({
 	  el: '#app-6',
 	  data: {
 	   bins: 20,
 	   tdbs: [1],
 	   items: [
-			  { age: [32,22], },
-		  ]
+			  {key:90 ,value:20 },
+		  ],
+	  
 	  },
 	  methods:{
 		  plotch(){
@@ -65,15 +68,17 @@
 			var binwidth = this.bins;
 			var tdbsdim = tdbscrossfilter.dimension(function(d) { return d;});
 			var tdbsgroup = tdbsdim.group(function(d) { return binwidth * Math.floor(d/binwidth); });
-	//		var tdbsgroup = tdbsdim.group().reduceCount();
+			this.items = tdbsgroup.all()
+			var extent = d3.extent(this.tdbs)
+			extent[0] = extent[0]-binwidth
 
 			var chart = dc.barChart("#ch1");
 			chart
 			    .width(768)
 			    .height(480)
 			    .xUnits(dc.units.fp.precision(binwidth))
-			//    .xUnits(tdbsgroup)
-			    .x(d3.scaleLinear().domain(d3.extent(this.tdbs)))
+			   // .x(d3.scaleLinear().domain(d3.extent(this.tdbs)))
+			    .x(d3.scaleLinear().domain(extent))
 			    .brushOn(false)
 			    .yAxisLabel("Temperature bins degF")
 			    .dimension(tdbsdim)
@@ -82,12 +87,14 @@
 			chart.render();
 
 			  
-dc.dataTable("#tdb-table")
-            .dimension(tdbsdim)
-	    .section(function(d){return d})
-            .columns(['tdbs'])
-        .size(500) 
-        .order(d3.descending)
+			dc.dataTable("#tdb-table")
+			    .dimension(tdbsdim)
+			    .section(function(d){return d})
+			    .columns(['tdbs'])
+			    .size(500) 
+		       	    .order(d3.descending)
+
+
 			 },
 
 		  openFile (event){
@@ -100,19 +107,22 @@ dc.dataTable("#tdb-table")
 			  self.plotch()
 			  }
 			  reader.readAsText(event);
-			  }
+			  },
+
+		  objtoarray(bins){
+				 return String(Object.keys(bins).map(function(key) {
+					return String(bins[key].key)+','+String(bins[key].value)+'\n';
+		  		}));
+		  }
 		 }
 	 }
 	  )
-
 var apptest = new Vue({
   el: "#apptest",
   data: {
-    name: "Sitepoint",
-	value:4
-  }
-});
-
+	 message:"text to copy"
+	}
+  });
 
 </script>
 
