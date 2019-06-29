@@ -9,37 +9,68 @@
 <div id = "apptest">
 	<br>
 	<br>
-	<b-button  variant = "outline-primary" @click="faction">test action</b-button><br>
+	<br>
 
+	<b-button variant = "outline-primary" v-clipboard:copy="clipboarddata">Copy</b-button><br>
+
+	<p>${clipboarddata}</p>
 	<b-form-file id='idffile' placeholder="Choose *.epw weather file" @input="openFile"></b-form-file><br><br>
 
 
-<template>
-  <b-container fluid style="border:1px solid #cecece;">
-    <b-row class="my-1" v-for="type in types" :key="type">
-      <b-col sm="3">
-        <label :for="`type-${type}`">Type {{ type }}:</label>
-      </b-col>
-      <b-col sm="9">
-        <b-form-input :id="`type-${type}`" :type="type"></b-form-input>
-      </b-col>
-    </b-row>
-  </b-container>
-</template>
+	  <b-container >
+	  <b-row  v-for="each in filtersn" :key="each.inp">
+	      <b-col sm="3">
+		<label :for="each.inp">Inputs ${ each.inp }:</label>
+	      </b-col>
 
 
+	      <b-col sm="3">
+		<label >Minimum:</label>
+	      </b-col>
+	      <b-col >
+		      <b-input :id="each.inp" :type="each.type" v-model="each.min"></b-input>
+	      </b-col>
+
+	      <b-col sm="3">
+		<label >Maximum</label>
+	      </b-col>
+	      <b-col >
+		      <b-input :id="each.inp" :type="each.type" v-model="each.max"></b-input>
+	      </b-col>
+
+	    </b-row>
+
+	  <b-row  v-for="each in filtersl" :key="each.inp">
+	      <b-col sm="3">
+		<label :for="each.inp">Inputs ${ each.inp }:</label>
+	      </b-col>
+
+	      <b-col sm="9">
+		    <b-select v-model="each.value" :options="each.options" multiple :select-size="2"></b-select>
+	      </b-col>
+	    </b-row>
+	  </b-container>
+
+  
+	<br>
+	<br>
+
+	<b-card>
+
+	<b-button variant = "outline-primary" @click="faction">Load API Data</b-button><br><br>
+	<p>Imported data: ${simdata}</p> <br>
+	</b-card>
 
 	<br>
 	<br>
-	<b-button variant = "outline-primary" v-clipboard:copy="clipboarddata">Copy</b-button><br>
+
+	<div id = 'ch1'>[--]<br></div>
+
+
 </div>
-
-
-<div>
 </body>
 
-<link rel="shortcut icon" href="">
-
+	<link rel="shortcut icon" href="">
 
 	<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
 	<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>
@@ -48,8 +79,14 @@
 	<script src="https://cdn.jsdelivr.net/npm/vue-clipboards@1.2.4/dist/vue-clipboards.min.js"></script>
 	<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
 
+	<script src="https://unpkg.com/crossfilter2@1.4.7/crossfilter.min.js"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+
+
 
 	<script type = "text/javascript" 
 		 src = "{{ url_for('static', filename = 'js/simdata.js') }}" ></script>
+
+
 </html>
 

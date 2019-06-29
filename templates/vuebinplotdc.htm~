@@ -20,35 +20,40 @@
 	
 <div id = "app-6">
 	<br><br>
-	<b-container fluid style="border:1px solid #cecece;">
-		<label for="idffile">Select weather file</label><br>
-		<b-form-file id='idffile' placeholder="Choose *.epw weather file" @input="openFile"></b-form-file><br><br>
-		<b-form-input v-model='bins' type="range" min=1 max=100 id="myrange" @change="plotch"></b-form-input><br><br>
-		<input v-model.lazy="bins" placeholder="edit me" @change="plotch"><br>
-		<p>Bin width: {{ bins }}</p> <br>
-		<div id = 'ch1'></div>
 
-	        <b-button variant = "outline-primary" v-clipboard:copy="objtoarray(items)">Copy</b-button>
+	<h3>Inputs</h3>
+	<b-card style="border:1px solid #cecece;">
+
+	<br><br>
+		<b-row>
+			<b-col cols ='1'><label for="idffile">Select weather file</label></b-col><br>
+			<b-col cols = '3'><b-form-file id='idffile' placeholder="Choose *.epw weather file" @input="openFile"></b-form-file></b-col><br><br>
+			<b-col></b-col>
+		</b-row>
+
+
+		<b-row>
+			<b-col cols ='1'><label for="noofbins">Bin width</label></b-col><br>
+			<b-col cols ='2'><input id="nobinstxt" v-model.lazy="bins" placeholder="edit me" @change="plotch"><br></b-col>
+			<b-col cols ='1'><b-form-input v-model='bins' type="range" min=1 max=100 id="myrange" @change="plotch"></b-form-input><br><br></b-col>
+		</b-row>
+
+	</b-card>
+	<br><br>
+	<br><br>
+	<h3> Bin Chart</h3>
+	<div id = 'ch1'>[--]</div>
+
+	<br><br>
+	<h3> Bin values</h3>
+	        <b-button variant = "outline-primary" v-clipboard:copy="objtoarray(items)">Copy bin data</b-button>
 		<b-table  striped hover :items="items" fields="temps"></b-table>
-		<!-- 
-		<table id="tdb-table"></table>
 
-			 <div id='data-table'>
-			 <div class='header'>
-			 <span>tdbs</span>
- 				</div>
-			 </div>
-		 /-->
-
-	</b-container>
 
 </div>
 <br>
 <br>
 
-<div id = "apptest">
-	        <button  v-clipboard:copy="message">Copy</button>
-</div>
 
 <script>
         Vue.use(vueClipboards);
@@ -58,7 +63,7 @@
 	   bins: 20,
 	   tdbs: [1],
 	   items: [
-			  {key:90 ,value:20 },
+			  {key:0 ,value:0 },
 		  ],
 	  
 	  },
@@ -80,7 +85,8 @@
 			   // .x(d3.scaleLinear().domain(d3.extent(this.tdbs)))
 			    .x(d3.scaleLinear().domain(extent))
 			    .brushOn(false)
-			    .yAxisLabel("Temperature bins degF")
+			    .yAxisLabel("Hours")
+			    .xAxisLabel("Temperature range (degF)")
 			    .dimension(tdbsdim)
 			    .group(tdbsgroup)
 	//		    .xAxis().ticks(5)
@@ -117,12 +123,6 @@
 		 }
 	 }
 	  )
-var apptest = new Vue({
-  el: "#apptest",
-  data: {
-	 message:"text to copy"
-	}
-  });
 
 </script>
 
