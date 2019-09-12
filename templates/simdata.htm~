@@ -59,6 +59,12 @@
 		      <label>Input equip min value: ${filtersn[0].min}</label>
 	      </b-col--!>
 	  </b-row>
+	  <b-row >
+	      <b-col sm="9">
+		      <label>Test value: ${filtersn[0].min}</label>
+	      </b-col--!>
+	  </b-row>
+
 	  </b-container>
 
   
@@ -88,6 +94,7 @@
 
 	<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
 	<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/3.1.2/dc.css"/>
 
 	<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue-clipboards@1.2.4/dist/vue-clipboards.min.js"></script>
