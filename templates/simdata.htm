@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link rel="shortcut icon" href="">
 	<meta charset="UTF-8">
 	<title>simdata</title>
 </head>
@@ -23,22 +24,20 @@
 		<label :for="each.inp">Inputs ${ each.inp }:</label>
 	      </b-col>
 
-
-	      <b-col sm="3">
-		<label >Minimum:</label>
-	      </b-col>
 	      <b-col >
-		      <b-input :id="each.inp" :type="each.type" v-model="each.min"></b-input>
+			<b-input-group size="sm" prepend="Min" >
+			    <b-form-input :id="each.inp" :type="each.type" v-model="each.min"></b-form-input>
+			</b-input-group>
+
 	      </b-col>
 
-	      <b-col sm="3">
-		<label >Maximum</label>
-	      </b-col>
 	      <b-col >
-		      <b-input :id="each.inp" :type="each.type" v-model="each.max"></b-input>
+			<b-input-group size="sm" prepend="Max" >
+			    <b-form-input :id="each.inp" :type="each.type" v-model="each.max"></b-form-input>
+			 </b-input-group>
 	      </b-col>
 
-	    </b-row>
+	  </b-row>
 
 	  <b-row  v-for="each in filtersl" :key="each.inp">
 	      <b-col sm="3">
@@ -46,9 +45,20 @@
 	      </b-col>
 
 	      <b-col sm="9">
+
 		    <b-select v-model="each.value" :options="each.options" multiple :select-size="2"></b-select>
 	      </b-col>
-	    </b-row>
+	  </b-row>
+
+	<br>
+	<br>
+	<br>
+
+	  <b-row >
+	      <b-col sm="9">
+		      <label>Input equip min value: ${filtersn[0].min}</label>
+	      </b-col--!>
+	  </b-row>
 	  </b-container>
 
   
@@ -58,13 +68,17 @@
 	<b-card>
 
 	<b-button variant = "outline-primary" @click="faction">Load API Data</b-button><br><br>
-	<p>Imported data: ${simdata}</p> <br>
+
+	<div id = 'ch1'>[--]<br></div>
+
+	<div id = 'boxch1'>[--]<br></div>
+
+	<!--p>Imported data: ${simdata}</p> <br--!>
 	</b-card>
 
 	<br>
 	<br>
 
-	<div id = 'ch1'>[--]<br></div>
 
 
 </div>
@@ -74,6 +88,7 @@
 
 	<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
 	<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/3.1.2/dc.css"/>
 
 	<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue-clipboards@1.2.4/dist/vue-clipboards.min.js"></script>
@@ -83,10 +98,17 @@
 	<script src="https://d3js.org/d3.v5.min.js"></script>
 	<script src="http://unpkg.com/dc@3/dc.js"></script>
 
-
+	<!-- link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/c3/c3.min.css"></script>
+	<script src="https://cdn.jsdelivr.net/npm/c3/c3.min.js"></script --!>
 
 	<script type = "text/javascript" 
 		 src = "{{ url_for('static', filename = 'js/simdata.js') }}" ></script>
+
+	<script type = "text/javascript" 
+		 src = "{{ url_for('static', filename = 'js/c3.min.js') }}" ></script>
+
+	<link rel = "stylesheet" 
+		 src = "{{ url_for('static', filename = 'css/c3.min.css') }}" ></script>
 
 
 </html>

@@ -18,7 +18,8 @@ def simdata():
 
 @app.route('/simdataapi',methods=['GET','POST'])
 def simdataapi():
-    return  jsonify(pd.read_csv('EUI.csv').iloc[:,:].replace(np.NAN,'nan').to_dict(orient = 'records'))
+#    return  jsonify(pd.read_csv('EUI.csv').iloc[:5000,:].replace(np.NAN,'nan').to_dict(orient = 'records'))
+    return  jsonify(pd.read_csv('EUI.csv').replace(np.NAN,'nan').to_dict(orient = 'records'))
 
 @app.route('/testdataapi')
 def testdataapi():
