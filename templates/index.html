@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+	<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue-clipboards@1.2.4/dist/vue-clipboards.min.js"></script>
+	<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+	<script src="https://unpkg.com/crossfilter2@1.4.7/crossfilter.min.js"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<script src="http://unpkg.com/dc@3/dc.js"></script>
+
+	<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+	<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>
+
+	<script type="text/javascript" src="simdata.js"></script>
+</head>
+<body>
+	<button type="button" class="btn btn-primary" onclick="message()">clickme</button><br>
+
+<div id = "app-6">
+
+	<b-button variant = "outline-primary" v-clipboard:copy="plotch()">Copy</b-button><br>
+
+	<input v-model.lazy="bins" placeholder="edit me" @change="plotch"><br><br>
+	<p>Bin width: {{ bins }}</p> <br>
+<div>
+</body>
+</html>
+

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>etoolsweb</title>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <script src = "https://unpkg.com/crossfilter2@1.4.7/crossfilter.min.js"></script>
+      <script src = "http://unpkg.com/dc@3/dc.js"></script>
+      <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+<body>
+
+	
+<div id = "app-6">
+	<label for="weatherFile">Select weather file</label><br>
+	<input type="file" id="file" ref="idfFiles" class="custom-file-input" @change="openFile" multiple><br><br>
+	<input type="range" min=1 max=100 value=20 class='slider' id="myrange" v-model="bins">  <br><br>
+	<input v-model="bins" placeholder="edit me">
+	<p>Message is: {{ bins }}</p> <br>
+	<div id = 'ch1'>ch1</div>
+</div>
+
+area
+div
+
+<script>
+	var app6 = new Vue({
+	  el: '#app-6',
+	  data: {
+	   bins: 20,
+	   tdbs: [1]
+	  },
+	  methods:{
+	  openFile (){
+	  let self =this
+	  var input = self.$refs.idfFiles.files;
+	  var reader = new FileReader();
+	  reader.readAsText(app6.$refs.idfFiles.files[0]);
+	  reader.onload = function(){
+	  var text1 = reader.result.split('\n').slice(-8761).join('\n');
+	  self.tdbs = d3.csvParseRows(text1,function(d,i){return +d[6]*1.8+32;});
+	  }
+
+	  margin = {top: 20, right: 80, bottom: 30, left: 40},
+		     width = 950 - margin.left - margin.right,
+		     height = 500 - margin.top - margin.bottom;
+
+	var x = d3.scaleLinear()
+	    .domain(d3.extent(self.tdbs)).nice()
+	    .range([0,width])
+
+	var hist = d3.histogram()
+	    .domain(x.domain())
+	    .thresholds(x.ticks(self.bins))
+
+ 	var bins = hist(self.tdbs);
+
+	var yMax = d3.max(bins, function(d){return d.length});
+	var y = d3.scaleLinear()
+		    .domain([0, yMax])
+		    .rangeRound([height,0]);
+
+//   d3.select('svg').remove();
+	   var svg = d3.select("#ch1")
+		       .append("svg")
+		       .attr("width", width + margin.left + margin.right)
+		       .attr("height", height + margin.top + margin.bottom)
+		       .append("g")
+		       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+	 const bar = svg.append("g")
+	    .attr("fill", "steelblue")
+	    .selectAll("rect")
+	    .data(bins)
+	    .enter().append("rect")
+	     .attr("x", d => x(d.x0) + 1)
+	     .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
+	     .attr("y", d => y(d.length))
+	     .attr("height", d => y(0) - y(d.length));
+
+
+//append axis
+	svg.append("g")
+	     .attr("transform", `translate(0,${height})`)
+	     .call(d3.axisBottom(x))
+	     .call(g => g.append("text")
+	       .attr("x", width/2)
+	       .attr("fill", "#000")
+	       .attr("font-weight", "bold")
+	       .attr("y", 27)
+	      .attr("text-anchor", "end")
+	       .text('Temperature [deg F]'));
+
+
+	svg.append("g")
+	      .attr("transform", `translate(50,0)`)
+	      .call(g => g.append("text")
+		.attr("fill", "#000")
+		.attr("font-weight", "bold")
+	//       .attr("text-anchor", "center")
+		.text("weather epw"));
+	//	.text(input.files[0]['name'].split('.epw')[0]));
+
+
+	svg.append("g")
+	      .call(d3.axisLeft(y))
+	      .call(g => g.select(".domain").remove())
+	      .call(g => g.append("text")
+		.attr("fill", "#000")
+		.attr("font-weight", "bold")
+	//      .attr("text-anchor", "end")
+		.text('Hours'));
+
+
+	bar.append("text")
+	    .attr("dy", ".75em")
+	    .attr("y", 6)
+	//  .attr("x", (x(data[0].x0) - x(data[1].x0)) / 2)
+	    .attr("x", (x(bins[0].x0)+6))
+	//  .attr("text-anchor", "middle")
+  	    .text(function(d) { return d.length;});
+	  }}
+	  })
+
+</script>
+
+</body>
+</html>
