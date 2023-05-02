@@ -18,7 +18,7 @@ def home():
 
 @app.route('/simdata')
 def simdata():
-	return render_template("simdata.html")
+	return render_template("simdata.htm")
 
 @app.route('/simdataapi',methods=['GET','POST'])
 def simdataapi():
@@ -27,7 +27,7 @@ def simdataapi():
 
 
 @app.route('/kidu', methods=['GET','POST'])
-def simdata():
+def kidu():
     return render_template("kidu.htm",data = 'None')
 
 
