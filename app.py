@@ -70,7 +70,6 @@ def bindata():
 def bindatadc():
 	return render_template("vuebinplotdc.html")
 
-
 def upload_file():
     if request.method == 'POST':
 #            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
