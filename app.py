@@ -14,7 +14,7 @@ app.secret_key='this is my secret'
 
 @app.route('/')
 def home():
-	return "Hello, check address! \n \\simple.png \n \\eapp \n \\binplot "
+	return "Hello, check address! \n \\simple.png \n \\simdata\n \\kidu"
 
 @app.route('/simdata')
 def simdata():
